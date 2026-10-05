@@ -1,20 +1,29 @@
-name: Demo Game CI/CD
+name: Deploy Game Website
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Verify Game File Exists
-        run: test -f game.html
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Success Message
-        run: echo "Game file found successfully"
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy
+        uses: actions/deploy-pages@v4
