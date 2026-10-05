@@ -1,4 +1,4 @@
-name: Demo Workflow
+name: Game CI/CD
 
 on:
   push:
@@ -6,9 +6,17 @@ on:
       - main
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Hello
-        run: echo "Workflow Started"
+      - uses: actions/checkout@v4
+
+      - name: Check Files
+        run: ls -la
+
+      - name: Verify HTML Exists
+        run: test -f index.html
+
+      - name: Success Message
+        run: echo "Website validation successful"
