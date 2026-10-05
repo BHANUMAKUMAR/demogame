@@ -1,4 +1,4 @@
-name: Demo Workflow
+name: Demo Game CI/CD
 
 on:
   push:
@@ -10,8 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verify HTML Exists
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Game File Exists
         run: test -f game.html
 
-      - name: Success
+      - name: Success Message
         run: echo "Game file found successfully"
