@@ -1,4 +1,4 @@
-name: Game CI/CD
+name: Demo Workflow
 
 on:
   push:
@@ -6,17 +6,14 @@ on:
       - main
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check Files
-        run: ls -la
-
       - name: Verify HTML Exists
-        run: test -f index.html
+        run: test -f demogame/game.html
 
-      - name: Success Message
-        run: echo "Website validation successful"
+      - name: Success
+        run: echo "Game file found successfully"
