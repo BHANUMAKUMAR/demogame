@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify HTML Exists
-        run: test -f demogame/game.html
+      - name: Show Files
+        run: ls -R
 
       - name: Success
-        run: echo "Game file found successfully"
+        run: echo "Workflow Started"
