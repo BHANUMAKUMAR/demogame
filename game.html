@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Target Click Challenge</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    text-align:center;
+}
+
+h1{
+    margin-top:20px;
+}
+
+#hud{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    font-size:20px;
+    margin:15px;
+}
+
+#gameArea{
+    width:800px;
+    height:500px;
+    background:#111827;
+    border:3px solid #38bdf8;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+    border-radius:10px;
+}
+
+.target{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    position:absolute;
+    cursor:pointer;
+    background:red;
+    box-shadow:0 0 15px red;
+}
+
+button{
+    padding:12px 25px;
+    font-size:18px;
+    margin:10px;
+    border:none;
+    border-radius:8px;
+    background:#38bdf8;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0284c7;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎯 Target Click Challenge</h1>
+
+<div id="hud">
+    <div>Score: <span id="score">0</span></div>
+    <div>Time: <span id="time">30</span></div>
+    <div>High Score: <span id="highScore">0</span></div>
+</div>
+
+<button onclick="startGame()">Start Game</button>
+
+<div id="gameArea"></div>
+
+<script>
+
+const gameArea = document.getElementById("gameArea");
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const highScoreEl = document.getElementById("highScore");
+
+let score = 0;
+let timeLeft = 30;
+let gameRunning = false;
+let timer;
+let highScore = localStorage.getItem("highScore") || 0;
+
+highScoreEl.textContent = highScore;
+
+function createTarget(){
+
+    if(!gameRunning) return;
+
+    const target = document.createElement("div");
+    target.classList.add("target");
+
+    const x = Math.random() * 740;
+    const y = Math.random() * 440;
+
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+
+    const colors = ["red","yellow","lime","cyan","orange"];
+    const color = colors[Math.floor(Math.random()*colors.length)];
+
+    target.style.background = color;
+    target.style.boxShadow = `0 0 15px ${color}`;
+
+    target.onclick = function(){
+
+        score++;
+        scoreEl.textContent = score;
+
+        target.remove();
+
+        createTarget();
+    };
+
+    gameArea.innerHTML = "";
+    gameArea.appendChild(target);
+}
+
+function startGame(){
+
+    score = 0;
+    timeLeft = 30;
+
+    scoreEl.textContent = score;
+    timeEl.textContent = timeLeft;
+
+    gameRunning = true;
+
+    createTarget();
+
+    clearInterval(timer);
+
+    timer = setInterval(() => {
+
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+
+        if(timeLeft <= 0){
+
+            clearInterval(timer);
+            gameRunning = false;
+
+            gameArea.innerHTML = "";
+
+            if(score > highScore){
+                highScore = score;
+                localStorage.setItem("highScore", highScore);
+                highScoreEl.textContent = highScore;
+            }
+
+            alert("Game Over!\nScore: " + score);
+        }
+
+    },1000);
+}
+
+</script>
+
+</body>
+</html>
