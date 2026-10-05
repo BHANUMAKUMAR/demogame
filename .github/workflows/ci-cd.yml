@@ -1,0 +1,62 @@
+name: 🎯 Target Click Game
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  validate:
+    name: validate HTML
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout Repository
+       uses: actions/checkout@v4
+     - name: Install HTML Tidy
+       run: sudo apt-grt update && sudo apt-get install -y tidy
+
+     - name: Validate HTML
+       run: tidy -qe index.html
+  build:
+    name: Create Artifact
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+ 
+      - name: Zip Website
+        run: zip game.zip index.html
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-build
+          path: game.zip
+
+  deploy:
+    name: Deploy To GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - names: checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: upload Pages Artifact
+        uses: action/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy Pages
+        id: deployment
+      
+     
